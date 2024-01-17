@@ -35,11 +35,13 @@ class SwapEvent(BaseModel):
     tx_index = models.PositiveBigIntegerField(verbose_name="Transaction Index")
     gas_used = models.PositiveBigIntegerField()
     gas_price = models.PositiveBigIntegerField()
-    execution_price = models.DecimalField(max_digits=50, decimal_places=20)
 
     # Store ETH to USD exchange rate at the time of creating a swap event.
     # This will be used to convert all ETH cost to USD
     usd_exchange_rate = models.DecimalField(max_digits=7, decimal_places=2)
+
+    execution_price_eth = models.DecimalField(max_digits=50, decimal_places=20)
+    execution_price_usd = models.DecimalField(max_digits=50, decimal_places=20)
 
     tx_eth_cost = models.DecimalField(max_digits=50, decimal_places=20, verbose_name="Transaction ETH Cost")  # Transaction ETH cost is: (gas_used * gas_price) / 1e18
     tx_usd_cost = models.DecimalField(max_digits=50, decimal_places=20, verbose_name="Transaction USD Cost")
