@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  db:
+    container_name: db
+    restart: always
+    image: postgres:16.1-alpine3.18
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=$DB_NAME
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $DB_NAME -U $DB_USER"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app-server:
+    build: .
+    container_name: app_server
+    command: sh -c "python manage.py migrate && gunicorn eth_swap_indexer.asgi"
+    volumes:
+      - .:/code
+    ports:
+      - $PORT:$PORT
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+
+  celery-server:
+    build: .
+    container_name: celery
+    command: sh -c "celery -A eth_swap_indexer worker -l INFO"
+    volumes:
+      - .:/code
+    env_file:
+      - .env
+
+volumes:
+  postgres-db:
