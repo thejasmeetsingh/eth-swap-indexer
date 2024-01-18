@@ -81,7 +81,15 @@ def create_swap_event(_w3: Web3, _config_obj: Config, _swap_event) -> None:
     block_number = _swap_event.blockNumber
     log_index = _swap_event.logIndex
 
-    tx_data = get_transaction_details(_w3, tx_hash)
+    # Check cache for transaction data
+    cached_tx_data = cache.get(tx_hash)
+    if cached_tx_data:
+        tx_data = cached_tx_data
+    else:
+        # Fetch the transasction details from the provider
+        tx_data = get_transaction_details(_w3, tx_hash)
+        cache.set(tx_hash, tx_data, CACHE_TIMEOUT)
+
     if not tx_data:
         logger.error({"msg": "No transaction data found", "config_id": _config_obj.id})
         return
@@ -153,7 +161,7 @@ def process_swap_events(config_id: str) -> None:
             create_swap_event(w3, config, swap_event)
 
             # Once we reach the threshold chunk size, Pause the execution
-            # So that we don't get the rate limit error from the API
+            # So that we don't get the rate limit error from the HTTP Provider
             if idx % CHUNK_SIZE == 0:
                 sleep(5)
                 logger.info(f"{CHUNK_SIZE} swap events are processed successfully, Pausing the execution for 5 seconds!")
