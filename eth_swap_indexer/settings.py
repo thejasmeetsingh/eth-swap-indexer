@@ -115,7 +115,6 @@ STORAGES = {
 }
 
 
-
 # Load celery credentials
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
 CELERY_TASK_DEFAULT_QUEUE = os.getenv('CELERY_TASK_DEFAULT_QUEUE')
