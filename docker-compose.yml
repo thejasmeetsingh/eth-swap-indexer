@@ -16,10 +16,20 @@ services:
       timeout: 5s
       retries: 5
 
-  app-server:
+  redis:
+    container_name: redis
+    restart: always
+    image: redis:7.2.3-alpine
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
     build: .
-    container_name: app_server
-    command: sh -c "python manage.py migrate && gunicorn eth_swap_indexer.asgi"
+    container_name: app
+    command: sh run_server.sh
     volumes:
       - .:/code
     ports:
@@ -27,15 +37,20 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     env_file:
       - .env
 
-  celery-server:
+  celery:
     build: .
     container_name: celery
     command: sh -c "celery -A eth_swap_indexer worker -l INFO"
     volumes:
       - .:/code
+    depends_on:
+      redis:
+        condition: service_healthy
     env_file:
       - .env
 

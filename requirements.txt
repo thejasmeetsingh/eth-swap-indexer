@@ -9,6 +9,7 @@ click-plugins==1.1.1
 click-repl==0.3.0
 Django==5.0.1
 gunicorn==21.2.0
+hiredis==2.3.2
 h11==0.14.0
 kombu==5.3.5
 packaging==23.2
@@ -19,6 +20,7 @@ pydantic_core==2.14.6
 python-dateutil==2.8.2
 python-dotenv==1.0.0
 python-json-logger==2.0.7
+redis==5.0.1
 requests==2.31.0
 six==1.16.0
 sqlparse==0.4.4
@@ -28,3 +30,4 @@ uvicorn==0.26.0
 vine==5.1.0
 wcwidth==0.2.13
 web3==6.14.0
+whitenoise==6.6.0
