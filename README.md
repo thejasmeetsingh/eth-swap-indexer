@@ -33,4 +33,4 @@ To run the ETH Swap Indexer, follow these steps:
 You can view logs of each container using docker desktop app or just by running this command: `docker container logs -f <container_name>`.
 
 ## Usage
-[](./assets/usage.mov)
+<iframe src="https://drive.google.com/file/d/1QApk8whP1PIkGxkXffp3FCcHTwHTh2Qm/preview" width="640" height="480"></iframe>
